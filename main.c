@@ -1,14 +1,11 @@
 #include <stdio.h>
-#include <errno.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <dirent.h>
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-extern int errno;
 
 int main(int argc, char const *argv[]) {
 
