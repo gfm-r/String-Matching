@@ -32,7 +32,7 @@ int main(int argc, char const *argv[]) {
 
                 int file=creat(FileName,0666);
                 counter++;
-                //cheac if we get an error while creating the file
+                //Check if we get an error while creating the file
                 if(file<0) {
                         perror("");
                         exit(1);
