@@ -48,9 +48,10 @@ void BruteForce(char *pat,int num_of_File,int *files){
                 sprintf(file_name,"%d",files[f]);//convert form int to char
 
                 int file=open(file_name,O_RDONLY);
-                // printf("file ds =%d\n",file );//for test
+                // printf("file ds =%d\n",file);//for test
                 read(file,&tmp_char,1);//one read to check,if the file is empty we will not inter the while
-                while (tmp_char!=EOF) {
+                /////////////////////////////////////////////
+                while (tmp_char!='?') {
                         N++;
                         read(file,&tmp_char,1);
                 }
@@ -62,43 +63,39 @@ void BruteForce(char *pat,int num_of_File,int *files){
                         exit(1);
                 }
                 i++;
-
                 while (i < N) {
-
                         if (pat[j] == tmp_char) {
-                                j++;
                                 i++;
+                                j++;
                                 read(file,&tmp_char,1);
-                                // printf("\tnext in == %c %c\n",tmp_char,pat[j] );//for test
                                 if (j == M) {
                                         printf("##############################################\n" );
                                         printf("\t-->Found in file -> %s\n",file_name);
                                         printf("\t-->At index [%d] \n", (i - j));
                                         j=0;
-                                        lseek(file,-(i-j+1),SEEK_CUR);
-
+                                        lseek(file,(i-j+1),SEEK_SET);
+                                        i--;
+                                        read(file,&tmp_char,1);
+                                        lseek(file,(-1),SEEK_SET);
                                 }
                                 else if (pat[j] != tmp_char) {
+                                        if (j>=2) {
+                                                int l=lseek(file,(i-j+1),SEEK_SET);
+
+                                                i=l;
+                                        }
                                         j=0;
-                                        lseek(file,-(i-j+1),SEEK_CUR);
-                                        read(file,&tmp_char,1);
-                                        // printf("\tlssek for != %c\n",tmp_char );FOR TEST
-                                        lseek(file,-1,SEEK_CUR);//temp
                                 }
                         }
                         else{
-                                // printf("xxx\tj=%d  m=%d\n",j,M );FOR TEST
                                 j=0;
                                 read(file,&tmp_char,1);
                                 i++;
-                                // printf("lssek for != %c\n",tmp_char );FOR TEST
                         }
                 }
 
-
         }//for the for
          // close(file);
-
 }//for the BruteForce function
 
 void KMPSearch(char *pat,int num_of_File,int *files){
@@ -116,7 +113,7 @@ void KMPSearch(char *pat,int num_of_File,int *files){
                 int file=open(file_name,O_RDONLY);
                 // printf("file ds =%d\n",file );//for test
                 read(file,&tmp_char,1);//one read to check,if the file is empty we will not inter the while
-                while (tmp_char!=EOF) {
+                while (tmp_char!='?') {
                         N++;
                         read(file,&tmp_char,1);
                 }
