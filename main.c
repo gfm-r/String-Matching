@@ -11,6 +11,7 @@
 void BruteForce(char *pat,int num_of_File,int *files);
 void KMPSearch(char*,int,int*);
 void computeLPSArray(char* pat, int M, int* lps);
+void CrateFiles();
 
 int main(int argc, char *argv[])
 {
@@ -30,6 +31,7 @@ int main(int argc, char *argv[])
                 num++;
                 scanf("%d",&in);
         }//for the while
+        void CrateFiles();
         BruteForce(pat,num,files);
         printf("\n\n" );
         KMPSearch(pat,num,files);
@@ -184,7 +186,7 @@ void computeLPSArray(char* pat, int M, int* lps)
         }
 }
 
-void CrateFiles(){
+void CreteFiles(){
         printf("\t '############ Starting Making The Fils ############\n" );
         /*srand = sets its argument seed as the seed for a new sequence of
            pseudo-random numbers -> from man page*/
