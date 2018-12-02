@@ -48,14 +48,12 @@ void BruteForce(char *pat,int num_of_File,int *files){
                 sprintf(file_name,"%d",files[f]);//convert form int to char
 
                 int file=open(file_name,O_RDONLY);
-                // printf("file ds =%d\n",file);//for test
                 read(file,&tmp_char,1);//one read to check,if the file is empty we will not inter the while
                 /////////////////////////////////////////////
                 while (tmp_char!='?') {
                         N++;
                         read(file,&tmp_char,1);
                 }
-                // printf("\t->Number of char in the file is= %d\n", N);//FOR TEST
                 lseek(file,0,SEEK_SET);
                 int read_Char =read(file,&tmp_char,1);
                 if(read_Char<0) {
@@ -107,20 +105,13 @@ void KMPSearch(char *pat,int num_of_File,int *files){
                 char file_name[3]={0};
 
                 sprintf(file_name,"%d",files[f]);//convert form int to char
-                // printf("##############################################\n" );
-                // printf("\t->opening file -> %s\n",file_name);
-
                 int file=open(file_name,O_RDONLY);
-                // printf("file ds =%d\n",file );//for test
                 read(file,&tmp_char,1);//one read to check,if the file is empty we will not inter the while
                 while (tmp_char!='?') {
                         N++;
                         read(file,&tmp_char,1);
                 }
-                // printf("\t->Number of char in the file is= %d\n", N);//FOR TEST
                 lseek(file,0,SEEK_SET);
-                // printf("pat char num= %d\n",M);//FOR TEST
-                // printf("%s\n",pat );
                 /////////////////////////////////////
 
                 // create lps[] that will hold the longest prefix suffix
@@ -178,31 +169,54 @@ void computeLPSArray(char* pat, int M, int* lps)
                 if (pat[i] == pat[len]) {
                         len++;
                         lps[i] = len;
-                        // printf("-------------match--------------------------\n" );//for test
-                        // printf("lps %d\n",lps[i] );//for test
-                        // printf("len %d\n",len );//for test
                         i++;
                 }
                 else if (len != 0) {
-                        // len = lps[len - 1];//orignal code
+                        // len = lps[len - 1];
                         len = 0;//my code
-                        // printf("-------------not match--------------------------\n" );//for test
-                        // printf("lps %d\n",lps[i] );//for test
-                        // printf("len %d\n",len );//for test
                         // Also, note that we do not increment
                         // i here
                 }
                 else {        // if (len == 0)
                         lps[i]=0;
-                        // printf("-------------len =0--------------------------\n" );//for test
-                        // printf("lps %d\n",lps[i]);//for test
                         i++;
-                        // printf("len =%d\n",len );//for test
                 }
         }
-        // printf("LPS=" );//for test
-        // int j;//for test
-        // for (j = 0; j < M-1; j++)//for test
-        //         printf("[%d],",lps[j]);//for test
-        // printf("[%d]\n",lps[j]);//for test
+}
+
+void CrateFiles(){
+        printf("\t '############ Starting Making The Fils ############\n" );
+        /*srand = sets its argument seed as the seed for a new sequence of
+           pseudo-random numbers -> from man page*/
+        srand(time(NULL));
+        char randChar='0';
+
+        char FileName[8];
+        int counter=0;
+        int counterForChar=100;
+
+//for every eteration we will creat a new file
+        for (int i = 0; i < 100; i++) {
+                //sprintf will convert int to char in our case we want to convert the cunter number into digit to usit in the file name
+                sprintf(FileName,"%d",counter);
+                //add a '.txt' as an extention for every file we will created
+                // strcat(FileName,".txt");
+
+                int file=creat(FileName,0666);
+                counter++;
+                //Check if we get an error while creating the file
+                if(file<0) {
+                        perror("");
+                        exit(1);
+                }
+/*in this for loop we will fill the file with random charactors*/
+                for ( int i=0; i < counterForChar; i++) {
+                        randChar=(rand()%(122-97))+97; //get new random char
+                        write(file,&randChar,1);
+                }
+                char e='?';
+                write(file,&e,1);
+                counterForChar+=100;
+                close(file);//optinal: we can close the file that we created
+        }
 }
