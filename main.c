@@ -6,16 +6,18 @@
 #include <stdlib.h>
 #include <time.h>
 #include <string.h>
-#include <sys/wait.h>
+# define NO_OF_CHARS 256
 
 void BruteForce(char *pat,int num_of_File,int *files);
 void KMPSearch(char*,int,int*);
 void computeLPSArray(char* pat, int M, int* lps);
-void CrateFiles();
+void Boyer(char *pat,int num_of_File,int *files);
+void CreteFiles();
 
 int main(int argc, char *argv[])
 {
         printf("## Welcome to the txt matcing program \n");
+        CreteFiles();
         printf("##\tEnter the pattern that you want, note (10-char MAX)\n");
         char pat[11] ={0};
         fgets(pat,11,stdin);
@@ -31,15 +33,20 @@ int main(int argc, char *argv[])
                 num++;
                 scanf("%d",&in);
         }//for the while
-        void CrateFiles();
+         // void CreteFiles();//un coment this if u want get a new random file
         BruteForce(pat,num,files);
         printf("\n\n" );
         KMPSearch(pat,num,files);
+        printf("\n\n" );
+        Boyer(pat,num,files);
         return 0;
 }
+//////////////////// BruteForce ////////////////////
+
 void BruteForce(char *pat,int num_of_File,int *files){
-        printf("\t\tBruteForce Starting\n");
+        printf("\t\t|BruteForce Starting|\n");
         for (int f = 0; f < num_of_File; f++) {//run the BruteForce for num_of_File that we enterd
+                ///////هذا الكود خاص بـ فتح الملفات وعد عدد الاحرف الموجودة بداخلة//
                 int M = strlen(pat)-1;//the length of the pattern
                 int N = 0;//num of char in the file
                 int i = 0; // index for txt[]
@@ -63,6 +70,8 @@ void BruteForce(char *pat,int num_of_File,int *files){
                         exit(1);
                 }
                 i++;
+
+                ///////////////////////////////////////////////////
                 while (i < N) {
                         if (pat[j] == tmp_char) {
                                 i++;
@@ -97,10 +106,12 @@ void BruteForce(char *pat,int num_of_File,int *files){
         }//for the for
          // close(file);
 }//for the BruteForce function
+//////////////////// KMP ////////////////////
 
 void KMPSearch(char *pat,int num_of_File,int *files){
-        printf("\t\tKMPS Starting\n");
+        printf("\t\t|KMPS Starting|\n");
         for (int f = 0; f < num_of_File; f++) {//run the KMPS for num_of_File that we enterd
+                ///////هذا الكود خاص بـ فتح الملفات وعد عدد الاحرف الموجودة بداخلة//
                 int M = strlen(pat)-1;//the length of the pattern
                 int N = 0;//num of char in the file
                 char tmp_char;//we will use this char in difirent plases in the code
@@ -114,8 +125,7 @@ void KMPSearch(char *pat,int num_of_File,int *files){
                         read(file,&tmp_char,1);
                 }
                 lseek(file,0,SEEK_SET);
-                /////////////////////////////////////
-
+                ///////////////////////////////////////////////////////////
                 // create lps[] that will hold the longest prefix suffix
                 // values for pattern
                 int lps[M];
@@ -185,7 +195,99 @@ void computeLPSArray(char* pat, int M, int* lps)
                 }
         }
 }
+//////////////////// Boyer Moore ////////////////////
+// A utility function to get maximum of two integers
+int max (int a, int b) {
+        return (a > b) ? a : b;
+}
+// The preprocessing function for Boyer Moore's
+// bad character heuristic
+void badCharHeuristic( char *pat, int m, int badchar[NO_OF_CHARS]){
+        // Initialize all occurrences as -1
+        for (int i = 0; i < NO_OF_CHARS; i++)
+                badchar[i] = -1;
+        // Fill the actual value of last occurrence of a character
+        for (int i = 0; i < m; i++)
+                badchar[(int) pat[i]] = i; //asci tableالى قيمته في الـ char نحول الحرف من
+}
+/* A pattern searching function that uses Bad
+   Character Heuristic of Boyer Moore Algorithm */
+void Boyer(char *pat,int num_of_File,int *files){
+        // void KMPSearch(char *pat,int num_of_File,int *files){
+        printf("\t\t|PyreMore Starting|\n");
+        for (int f = 0; f < num_of_File; f++) {  //run the PyreMore for num_of_File that we enterd
+                ///////هذا الكود خاص بـ فتح الملفات وعد عدد الاحرف الموجودة بداخلة//
+                int m = strlen(pat)-1;  //the length of the pattern
+                int n = 0;  //num of char in the file
+                int badchar[NO_OF_CHARS];
+                char tmp_char;  //we will use this char in difirent plases in the code
+                char file_name[3]={0};
 
+                sprintf(file_name,"%d",files[f]);  //convert form int to char
+                int file=open(file_name,O_RDONLY);
+                read(file,&tmp_char,1);  //one read to check,if the file is empty we will not inter the while
+                while (tmp_char!='?') {
+                        n++;
+                        read(file,&tmp_char,1);
+                }
+                lseek(file,0,SEEK_SET);
+                ///////////////////////////////////////////////////////////////////////
+                /* Fill the bad character array by calling
+                   the preprocessing function badCharHeuristic()
+                   for given pattern */
+                badCharHeuristic(pat, m, badchar);
+                int s = 0; // s is shift of the pattern with respect to text
+                int j = m-1;
+                lseek(file,((s+j)),SEEK_CUR);
+                read(file,&tmp_char,1);
+                lseek(file,(-((s+j)+1)),SEEK_CUR);
+                while(s <= (n - m)) {
+                        j = m-1;
+                        /* Keep reducing index j of pattern while
+                           characters of pattern and text are
+                           matching at this shift s */
+                        while(j >= 0 && pat[j] ==tmp_char) {
+                                j--;
+                                lseek(file,((s+j)),SEEK_CUR);
+                                read(file,&tmp_char,1);
+                                lseek(file,(-((s+j)+1)),SEEK_CUR);
+                        }
+                        /* If the pattern is present at current shift,
+                           then index j will become -1 after the above loop */
+                        if (j < 0) {
+                                printf("##############################################\n" );
+                                printf("\t-->Found in file -> %s\n",file_name);
+                                printf("\t-->At index [%d] \n",s+1);
+                                /* Shift the pattern so that the next character in text aligns with the last
+                                   occurrence of it in pattern. The condition s+m < n is necessary for
+                                   the case when pattern occurs at the end of text */
+                                if (s+m < n) {
+                                        lseek(file,((s+m)),SEEK_CUR); //xxxxxxxxxxxx
+                                        read(file,&tmp_char,1);
+                                        lseek(file,(-((s+m)+1)),SEEK_CUR);
+                                        s+=m-badchar[tmp_char];
+                                }
+                                else
+                                        s+=1;
+                        }
+                        else
+                                /* Shift the pattern so that the bad character in text aligns with the last occurrence of it in pattern. The max function is used to make sure that
+                                   we get a positive shift. We may get a negative shift if the last occurrence
+                                   of bad character in pattern is on the right side of the current character. */
+                                lseek(file,((s+j)),SEEK_CUR);
+                        read(file,&tmp_char,1);
+                        lseek(file,(-((s+j)+1)),SEEK_CUR);
+                        s += max(1, j - badchar[tmp_char]);
+                        j = m-1;
+                        lseek(file,((s+j)),SEEK_CUR);
+                        read(file,&tmp_char,1);
+                        lseek(file,(-((s+j)+1)),SEEK_CUR);
+                }
+        }
+}
+//////////////////////////////////////////////////////////////////////////////////////////
+
+///////////////CreteFiles///////////////
 void CreteFiles(){
         printf("\t '############ Starting Making The Fils ############\n" );
         /*srand = sets its argument seed as the seed for a new sequence of
@@ -222,3 +324,4 @@ void CreteFiles(){
                 close(file);//optinal: we can close the file that we created
         }
 }
+///////////////////////////////////////////////////////////////////////////
