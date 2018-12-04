@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-* [About the project](#About the project)
-* [How run the program](#How run the program)
+* [About](#About the project)
+* [How](#How run the program)
 
 ## About the project
 
@@ -14,6 +14,8 @@ b) Boyer-Moore's algorithm.
 we run the input pattern to every algorithm and compare the performance.
 
 ## How run the program
+This program is written in C language with stander C:99
+
 CD TO String-Matching directory and the run the following code
 ```bash
 gcc main.c
@@ -23,4 +25,4 @@ then
 ./a.out
 ```
 ## Screenshot
-![alt text](./Screen1.png) "screenshot"
+![alt text](./Screen1.png)
