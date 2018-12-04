@@ -2,8 +2,8 @@
 
 ## Table of Contents
 
-* [About](#About the project)
-* [How](#How run the program)
+* [About the project]
+* [How run the program]
 
 ## About the project
 
