@@ -17,7 +17,7 @@ void CreteFiles();
 int main(int argc, char *argv[])
 {
         printf("## Welcome to the txt matcing program \n");
-        CreteFiles();
+        // CreteFiles();//un comint this if u want to create randoms file
         printf("##\tEnter the pattern that you want, note (10-char MAX)\n");
         char pat[11] ={0};
         fgets(pat,11,stdin);
@@ -102,9 +102,8 @@ void BruteForce(char *pat,int num_of_File,int *files){
                                 i++;
                         }
                 }
-
+                close(file);
         }//for the for
-         // close(file);
 }//for the BruteForce function
 //////////////////// KMP ////////////////////
 
@@ -283,6 +282,7 @@ void Boyer(char *pat,int num_of_File,int *files){
                         read(file,&tmp_char,1);
                         lseek(file,(-((s+j)+1)),SEEK_CUR);
                 }
+                close(file);
         }
 }
 //////////////////////////////////////////////////////////////////////////////////////////
