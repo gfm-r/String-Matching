@@ -286,7 +286,6 @@ void Boyer(char *pat,int num_of_File,int *files){
         }
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-
 ///////////////CreteFiles///////////////
 void CreteFiles(){
         printf("\t '############ Starting Making The Fils ############\n" );

@@ -1,3 +1,8 @@
+/*
+   this file is for test main.c it will ask u to enter a pattern then it will calculate
+   the avarge time for specific Algorithm, the reslut will be written in "out" file
+ */
+
 #include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -7,7 +12,6 @@
 #include <time.h>
 #include <string.h>
 # define NO_OF_CHARS 256
-
 void BruteForce(char *pat,int num_of_File,int *files);
 void KMPSearch(char*,int,int*);
 void computeLPSArray(char* pat, int M, int* lps);
@@ -21,47 +25,35 @@ int main(int argc, char *argv[])
 								printf("##\tEnter the pattern that you want, note (10-char MAX)\n");
 								char pat[18] ={0};
 								fgets(pat,11,stdin);
-								// printf("##\tEnter the files names -1 is for terminate\n");
 
-								int num=100;//the number of file
 								int files[101]={0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99};    //arry for files names
-								int in=0;//variaple to save the file name from the user
-
-								// scanf("%d",&in);//ask the user to enter firist file name
-								// while (in!=-1) {//enter files name until we get -1 as terminated number
-								//         files[num]=in;
-								//         num++;
-								//         scanf("%d",&in);
-								// }//for the while
 
 								////////////تحليل النتائج/////////////
-								int ou=open("out",O_APPEND|O_RDWR,0755);
-								printf("file dis =%d\n",ou );
+								//out is the file that will we save the reslut into it
+								int out=open("out",O_APPEND|O_RDWR,0755);
+								printf("file dis =%d\n",out );
 								clock_t start=0;
 								clock_t end=0;
 								double cpu_time_used=0;
 								for (int i = 0; i <=5; i++) {
 																start = clock();
-																Boyer(pat,num,files);
+																Boyer(pat,100,files);
 																end = clock();
 																cpu_time_used += ((double) (end - start)) / CLOCKS_PER_SEC;
 								}
-								cpu_time_used=cpu_time_used/5;
-								int w=0;
-								w=write(ou,"Name of Algorithm=BruteForce\n",30);
-								write(ou,"Input-pat=",10);
-								write(ou,pat,sizeof(pat));
+								cpu_time_used=cpu_time_used/5; //run it for 5 tile to get the avarge
+								int w=write(out,"Name of Algorithm=BruteForce\n",30);
+								write(out,"Input-pat=",10);
+								write(out,pat,sizeof(pat));
+								write(out,"\n",2);//new line character
 
 								char tmp[12]={0x0};
 								sprintf(tmp,"%lf",cpu_time_used);
-								write(ou,"time=",5);
-								write(ou,tmp,sizeof(tmp));
-								write(ou,"\n",2);
+								write(out,"time=",5);
+								write(out,tmp,sizeof(tmp));
+								write(out,"\n",2);//new line character
 
-								close(ou);
-
-
-
+								close(out);
 								// BruteForce(pat,num,files);
 								// printf("\n\n" );
 								// KMPSearch(pat,num,files);
@@ -70,7 +62,6 @@ int main(int argc, char *argv[])
 								return 0;
 }
 //////////////////// BruteForce ////////////////////
-
 void BruteForce(char *pat,int num_of_File,int *files){
 								printf("\t\t|BruteForce Starting|\n");
 								for (int f = 0; f < num_of_File; f++) {        //run the BruteForce for num_of_File that we enterd
